@@ -1,0 +1,19 @@
+#There are 3 root types => (Query, Mutation, Subscription)
+
+# We have defined a 'Query' type with an 'info' field.
+# The exclamation makes a field non-nullable.
+
+    type Query {
+        info: String!
+        feed: [Link!]!
+    }
+
+    type Mutation {
+        post(url: String!, description: String!): Link!
+    }
+
+    type Link {
+        id: ID!
+        description: String!
+        url: String!
+    }
