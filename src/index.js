@@ -4,7 +4,7 @@ const { GraphQLServer } = require('graphql-yoga')
 // For now, everything is stored only in-memory rather than being persisted in a database.
 let links = [
     {
-        id: 'link-0',
+        id: 0,
         url: 'www.howtographql.com',
         description: 'Fullstack tutorial for GraphQL'
     }
@@ -19,10 +19,39 @@ const resolvers = {
         info: () => `This is the API of Taran Neeld's Hackernews Clone! :p`,
         feed: () => links,
     },
-    Link: {
-        id: (parent) => parent.id,
-        description: (parent) => parent.description,
-        url: (parent) => parent.url
+    //'args' hold multiple arguments
+    Mutation: {
+        post: (parent, args) => {
+            const link = {
+                id: idCount++,
+                description: args.description,
+                url: args.url
+            }
+            links.push(link)
+            return link
+        },
+        updateLink: (parent, args) => {
+            let link = links[args.id]
+            if (link) {
+                const newLink = {
+                    id: args.id,
+                    description: args.description,
+                    url: args.url
+                }
+                link = newLink
+                return link
+            } else {
+                return links
+            }
+        },
+        deleteLink: (parent, args) => {
+            if (links[args.id]) {
+                links.splice(args.id, 1)
+                return "success"
+            } else {
+                return "invalid link id"
+            }
+        }
     }
 }
 
